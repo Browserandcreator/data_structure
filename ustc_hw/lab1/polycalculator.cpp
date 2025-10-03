@@ -1,11 +1,15 @@
 #include <iostream>
-#include <vector>
-#include <utility>
 #include <cmath>
 #include <sstream>
 #include <iomanip>
 #include <climits>
 using namespace std;
+
+// 手写项结构体
+struct Term {
+    long long c;
+    int e;
+};
 
 struct Node {
     long long c;  // 系数
@@ -37,8 +41,9 @@ public:
             prev->next = new Node(c, e, cur);
         }
     }
-    void buildFromPairs(const vector<pair<long long,int>>& terms){
-        for (auto &t: terms) insertTerm(t.first, t.second);
+    // 用手写数组构建
+    void buildFromTerms(const Term* terms, int n){
+        for (int i = 0; i < n; ++i) insertTerm(terms[i].c, terms[i].e);
     }
 
     Poly add(const Poly& B) const {
@@ -59,18 +64,33 @@ public:
         }
         return R;
     }
+    Poly multiply(const Poly& B) const {
+        Poly R;
+        for (Node* p = head->next; p; p = p->next) {
+            for (Node* q = B.head->next; q; q = q->next) {
+                R.insertTerm(p->c * q->c, p->e + q->e);
+            }
+        }
+        return R;
+    }
+    Poly derivative() const {
+        Poly R;
+        for (Node* p = head->next; p; p = p->next) {
+            if (p->e != 0) {
+                R.insertTerm(p->c * p->e, p->e - 1);
+            }
+        }
+        return R;
+    }
 
-    // --- 选做 (1)：在 x 处求值 ---
     double eval(double x) const {
         double s = 0.0;
         for (Node* p=head->next; p; p=p->next) {
-            // 使用 pow，若 e 很大可换为快速幂或霍纳法
             s += static_cast<double>(p->c) * std::pow(x, p->e);
         }
         return s;
     }
 
-    // --- 选做 (4)：代数形式 ---
     string toAlgebra() const {
         Node* p = head->next;
         if (!p) return "0";
@@ -80,27 +100,21 @@ public:
             long long c = p->c;
             int e = p->e;
             if (c == 0) { p=p->next; continue; }
-
-            // 符号
             if (first) {
                 if (c < 0) ss << "-";
             } else {
                 ss << (c >= 0 ? "+" : "-");
             }
-
             long long absc = llabs(c);
-
-            // 主体：按 e 分类
-            if (e == 0) {                 // 常数
+            if (e == 0) {
                 ss << absc;
-            } else if (e == 1) {          // x
+            } else if (e == 1) {
                 if (absc != 1) ss << absc;
                 ss << "x";
-            } else {                      // x^e
+            } else {
                 if (absc != 1) ss << absc;
                 ss << "x^" << e;
             }
-
             first = false;
             p = p->next;
         }
@@ -124,30 +138,89 @@ private:
 };
 
 // ------- 演示 -------
-// 输入：
-// nA  c1 e1 c2 e2 ... c_nA e_nA
-// x_value
-// 输出：三行
-// 1) A 的“系数-指数”序列
-// 2) A 的代数形式（选做4）
-// 3) A 在 x 处的值（选做1）
+void printMenu() {
+    cout << "请选择操作:\n";
+    cout << "1. 输出多项式的系数-指数序列\n";
+    cout << "2. 输出多项式的代数形式\n";
+    cout << "3. 计算多项式在x处的值\n";
+    cout << "4. 求多项式的导函数\n";
+    cout << "5. 多项式加法\n";
+    cout << "6. 多项式减法\n";
+    cout << "7. 多项式乘法\n";
+    cout << "0. 退出\n";
+}
+
+Poly inputPoly() {
+    int n;
+    cout << "请输入项数: ";
+    cin >> n;
+    Term* terms = new Term[n];
+    cout << "请输入每一项的系数和指数(如 2 3 表示2x^3):\n";
+    for (int i = 0; i < n; ++i) cin >> terms[i].c >> terms[i].e;
+    Poly P; P.buildFromTerms(terms, n);
+    delete[] terms;
+    return P;
+}
+
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    // ios::sync_with_stdio(false);
+    // cin.tie(nullptr);
 
-    int nA;
-    if (!(cin >> nA)) return 0;
-    vector<pair<long long,int>> terms(nA);
-    for (int i=0;i<nA;++i) cin >> terms[i].first >> terms[i].second;
+    cout << "请输入第一个多项式:\n";
+    Poly A = inputPoly();
 
-    double x; cin >> x;
+    double x = 0.0;
+    cout << "请输入x的值: ";
+    cin >> x;
 
-    Poly A; A.buildFromPairs(terms);
-
-    A.printPairs();            // 序列输出（原基本要求 2）
-    A.printAlgebra();          // 选做 (4)：代数形式
-    cout.setf(ios::fixed);     // 选做 (1)：在 x 处求值
-    cout<<setprecision(6)<<A.eval(x)<<"\n";
+    int choice;
+    do {
+        printMenu();
+        cout << "请输入操作编号: ";
+        cin >> choice;
+        if (choice == 1) {
+            A.printPairs();
+        } else if (choice == 2) {
+            A.printAlgebra();
+        } else if (choice == 3) {
+            cout.setf(ios::fixed);
+            cout << setprecision(6) << A.eval(x) << "\n";
+        } else if (choice == 4) {
+            Poly dA = A.derivative();
+            cout << "导函数的系数-指数序列:\n";
+            dA.printPairs();
+            cout << "导函数的代数形式:\n";
+            dA.printAlgebra();
+        } else if (choice == 5) {
+            cout << "请输入另一个多项式:\n";
+            Poly B = inputPoly();
+            Poly C = A.add(B);
+            cout << "加法结果的系数-指数序列:\n";
+            C.printPairs();
+            cout << "加法结果的代数形式:\n";
+            C.printAlgebra();
+        } else if (choice == 6) {
+            cout << "请输入另一个多项式:\n";
+            Poly B = inputPoly();
+            Poly C = A.sub(B);
+            cout << "减法结果的系数-指数序列:\n";
+            C.printPairs();
+            cout << "减法结果的代数形式:\n";
+            C.printAlgebra();
+        } else if (choice == 7) {
+            cout << "请输入另一个多项式:\n";
+            Poly B = inputPoly();
+            Poly C = A.multiply(B);
+            cout << "乘法结果的系数-指数序列:\n";
+            C.printPairs();
+            cout << "乘法结果的代数形式:\n";
+            C.printAlgebra();
+        } else if (choice == 0) {
+            cout << "退出程序。\n";
+        } else {
+            cout << "无效的选择，请重新输入。\n";
+        }
+    } while (choice != 0);
 
     return 0;
 }
