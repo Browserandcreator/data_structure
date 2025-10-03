@@ -1,0 +1,23 @@
+/*
+ * LeetCode {id}. {title} ({difficulty})
+ * Link: {link}
+ * Tags: {tags}
+ * Approach: {approach} | Time: {time_complexity} | Space: {space_complexity}
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {{
+public:
+    // TODO: 实现你的解法
+}};
+
+// ===== 本地简单测试 =====
+// g++ -std=c++17 -O2 -pipe -static -s -o main {filename} && ./main
+int main() {{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    // TODO: 添加你的本地测试
+    return 0;
+}}

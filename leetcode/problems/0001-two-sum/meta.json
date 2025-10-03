@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "title": "Two Sum",
+  "slug": "two-sum",
+  "difficulty": "Easy",
+  "tags": [
+    "Array",
+    "Hash Table"
+  ],
+  "link": "https://leetcode.com/problems/two-sum",
+  "lastUpdated": "2025-10-03",
+  "solutions": [
+    {
+      "lang": "cpp",
+      "file": "cpp/v1-solution.cpp"
+    },
+    {
+      "lang": "python",
+      "file": "python/v1-solution.py"
+    }
+  ]
+}

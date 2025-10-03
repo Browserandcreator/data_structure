@@ -1,0 +1,15 @@
+"""
+LeetCode {id}. {title} ({difficulty})
+Link: {link}
+Tags: {tags}
+Approach: {approach} | Time: {time_complexity} | Space: {space_complexity}
+"""
+from typing import List
+
+class Solution:
+    # TODO: 实现你的解法
+    pass
+
+if __name__ == "__main__":
+    # TODO: 简单本地测试
+    pass

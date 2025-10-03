@@ -1,0 +1,22 @@
+{
+  "id": 121,
+  "title": "Best Time to Buy and Sell Stock",
+  "slug": "best-time-to-buy-and-sell-stock",
+  "difficulty": "Easy",
+  "tags": [
+    "Array",
+    "Dynamic Programming"
+  ],
+  "link": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock",
+  "lastUpdated": "2025-10-03",
+  "solutions": [
+    {
+      "lang": "cpp",
+      "file": "cpp/v1-solution.cpp"
+    },
+    {
+      "lang": "python",
+      "file": "python/v1-solution.py"
+    }
+  ]
+}
