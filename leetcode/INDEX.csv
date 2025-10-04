@@ -1,3 +1,5 @@
 id,slug,title,difficulty,tags,langs,lastUpdated
 1,two-sum,Two Sum,Easy,Array;Hash Table,cpp;python,2025-10-03
 121,best-time-to-buy-and-sell-stock,Best Time to Buy and Sell Stock,Easy,Array;Dynamic Programming,cpp;python,2025-10-03
+283,move-zeroes,Move Zeroes,Easy,Array;Two Pointers,cpp;python,2025-10-04
+283,problem-283,Problem 283,Easy,,cpp;python,2025-10-04

@@ -1,0 +1,22 @@
+{
+  "id": 283,
+  "title": "Move Zeroes",
+  "slug": "move-zeroes",
+  "difficulty": "Easy",
+  "tags": [
+    "Array",
+    "Two Pointers"
+  ],
+  "link": "https://leetcode.cn/problems/move-zeroes",
+  "lastUpdated": "2025-10-04",
+  "solutions": [
+    {
+      "lang": "cpp",
+      "file": "cpp/v1-solution.cpp"
+    },
+    {
+      "lang": "python",
+      "file": "python/v1-solution.py"
+    }
+  ]
+}
