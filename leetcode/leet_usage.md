@@ -1,100 +1,138 @@
-# 📖 leet.py 使用说明
+# leet.py 使用说明
 
-这是一个用于管理 LeetCode 题解仓库的脚本，支持自动从 LeetCode 获取题目信息、生成代码模板、维护索引和 README。
+`leet.py` 是一个帮助管理本地 LeetCode 题目代码的脚本工具。
 
----
-
-## 🚀 命令一览
-
-### 新建题目目录
-```bash
-python scripts/leet.py new --id 121 --langs cpp python
-```
 功能：
-- 自动从 LeetCode 获取标题、slug、难度、标签  
-- 生成 `problems/0121-best-time-to-buy-and-sell-stock/`  
-- 包含：`cpp/v1-solution.cpp`、`python/v1-solution.py`、`NOTES.md`、`meta.json`
 
-可选参数：
-- `--site com|cn` 选择数据源（默认 com，可用 cn）  
-- `--title/--slug/--difficulty/--tags` 手动覆盖自动结果  
-- `--langs` 支持 `cpp` / `python` / `java`  
+- **new / quick**：根据题号新建题目目录，自动补全元数据（标题、难度、标签、题干描述）；
+- **自动注入题干描述和 OJ 提供的函数框架**（C++ / Python）；
+- **remove**：删除误加的题目目录；
+- **index**：重建 `INDEX.csv`，维护题目索引；
+- **readme**：重建 `README.md`，自动生成题目表格。
 
----
+目录结构（示例）：
 
-### 一键命令（推荐）
-```bash
-# 最简用法（位置参数：题号 + 语言）
-python scripts/leet.py quick 121 cpp python
-
-# 国内环境（使用 leetcode.cn）
-python scripts/leet.py quick 121 cpp --site cn
-
-# 只写 C++ 解法
-python scripts/leet.py quick 146 cpp
 ```
-等价于依次执行：
-1. `new --id ...`  
-2. `index`  
-3. `readme`  
-
----
-
-### 生成/更新索引
-```bash
-python scripts/leet.py index
+problems/
+  0135-candy/
+    meta.json
+    cpp/v1-solution.cpp
+    python/v1-solution.py
+INDEX.csv
+README.md
 ```
-功能：
-- 扫描 `problems/` 目录  
-- 更新 `INDEX.csv`，记录所有题目的 id、标题、难度、标签、语言、更新时间  
 
 ---
 
-### 生成 README
+## 常见命令
+
+### 1. 新建题目
+
 ```bash
-python scripts/leet.py readme
+# 新建 135 号题 Candy，生成 C++ 和 Python 版本，使用英文站
+python leet.py quick 135 cpp python
+
+# 新建时优先使用中文站（题干为中文）
+python leet.py quick 135 cpp python --site cn
 ```
-功能：
-- 读取 `INDEX.csv`  
-- 自动生成/更新根目录 `README.md`，展示题目总览表  
+
+生成的 `cpp/v1-solution.cpp` 文件示例：
+
+```cpp
+/*
+ * LeetCode 135. Candy [Hard]
+ * Link: https://leetcode.com/problems/candy
+ * Tags: Greedy
+ *
+ * Problem:
+ * n 个孩子站成一排，每个孩子有一个评分...
+ *
+ * Approach: TODO
+ * Time: O(?), Space: O(?)
+ */
+
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        // 官方 OJ 框架已自动填充
+    }
+};
+```
+
+生成的 `python/v1-solution.py` 文件示例：
+
+```python
+"""
+LeetCode 135. Candy [Hard]
+Link: https://leetcode.com/problems/candy
+Tags: Greedy
+
+Problem:
+n 个孩子站成一排，每个孩子有一个评分...
+
+Approach: TODO
+Time: O(?), Space: O(?)
+"""
+
+class Solution:
+    def candy(self, ratings: List[int]) -> int:
+        # 官方 OJ 框架已自动填充
+        pass
+```
 
 ---
 
-## 📦 推荐工作流
+### 2. 删除误加的题目
 
-1. 新建题目目录（推荐用一键命令）：  
-   ```bash
-   python scripts/leet.py quick 121 cpp python
-   ```
+```bash
+# 用题号删除
+python leet.py remove --id 135
 
-2. 写解法：  
-   - 编辑 `problems/.../cpp/v1-solution.cpp`  
-   - 编辑 `problems/.../python/v1-solution.py`  
+# 用目录名删除
+python leet.py remove --dir 0135-candy
+```
 
-   写思路：  
-   - 编辑 `problems/.../NOTES.md`  
-
-3. 更新索引与 README：  
-   ```bash
-   python scripts/leet.py index
-   python scripts/leet.py readme
-   ```
-
-4. 提交到 GitHub：  
-   ```bash
-   git add .
-   git commit -m "feat(0121-best-time-to-buy-and-sell-stock): add cpp/python v1 solution"
-   git push
-   ```
+删除后会自动更新 `INDEX.csv` 和 `README.md`。
 
 ---
 
-## 📊 命令执行效果图（Mermaid）
+### 3. 重建索引与 README
 
-```mermaid
-flowchart TD
-    A[quick/new] --> B[生成题目目录\n(meta.json, NOTES.md, 代码模板)]
-    B --> C[index\n生成 INDEX.csv]
-    C --> D[readme\n更新 README.md 总览]
-    D --> E[git commit & push\n上传到 GitHub]
+```bash
+# 重建索引文件 INDEX.csv
+python leet.py index
+
+# 重建 README.md（若 INDEX.csv 不存在会自动调用 index）
+python leet.py readme
+```
+
+README 表格示例：
+
+|   ID | Title                                        | Difficulty | Tags   | Path                  |
+| ---: | -------------------------------------------- | :--------: | ------ | --------------------- |
+|  135 | [Candy](https://leetcode.com/problems/candy) |    Hard    | Greedy | `problems/0135-candy` |
+
+---
+
+## 注意事项
+
+1. **首次运行**需要网络访问 LeetCode，自动获取题目信息；
+2. 若无网络或接口变化，可以手动修改 `meta.json`；
+3. 自动生成的代码文件仅包含 **OJ 官方函数框架** + **题干描述**，需要你自己补充解答逻辑；
+4. `--site cn` 优先取中文描述，`--site com` 优先取英文。
+
+---
+
+## 快速上手
+
+```bash
+# 新建题目并开始写解答
+python leet.py quick 1 cpp python
+
+# 删除错误题目
+python leet.py remove --id 1
+
+# 更新索引与 README
+python leet.py index
+python leet.py readme
 ```
